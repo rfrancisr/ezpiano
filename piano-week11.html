@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piano Journey — Week 11</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208; --paper: #f5efe3; --cream: #ede5d0;
+    --gold: #c9973a; --amber: #e8b84b; --rust: #b84c1c;
+    --sage: #4a6650; --muted: #7a6e5f; --key-white: #faf7f0; --key-black: #2a2218;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background-color:var(--paper); color:var(--ink); font-family:'DM Mono',monospace;
+    font-weight:300; min-height:100vh; padding-bottom:80px;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(201,151,58,0.08) 27px,rgba(201,151,58,0.08) 28px); }
+  header { background:var(--ink); color:var(--paper); padding:48px 40px 36px; position:relative; overflow:hidden; }
+  header::before { content:'✨'; position:absolute; right:-10px; top:-20px; font-size:180px; opacity:0.06; transform:rotate(-15deg); pointer-events:none; }
+  .week-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; }
+  h1 { font-family:'Playfair Display',serif; font-size:clamp(32px,6vw,58px); font-weight:700; line-height:1.05; color:var(--key-white); margin-bottom:16px; }
+  h1 em { font-style:italic; color:var(--amber); }
+  .subtitle { font-size:13px; color:rgba(245,239,227,0.6); letter-spacing:0.05em; max-width:480px; line-height:1.7; }
+  .header-meta { display:flex; gap:32px; margin-top:28px; flex-wrap:wrap; }
+  .meta-chip { display:flex; flex-direction:column; gap:4px; }
+  .meta-chip span:first-child { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); opacity:0.7; }
+  .meta-chip span:last-child { font-size:14px; color:var(--paper); font-weight:400; }
+  .progress-bar-wrap { background:var(--cream); border-bottom:2px solid rgba(201,151,58,0.3); padding:12px 40px; display:flex; align-items:center; gap:20px; }
+  .pb-label { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+  .pb-track { flex:1; height:6px; background:rgba(201,151,58,0.2); border-radius:99px; overflow:hidden; }
+  .pb-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--gold),var(--amber)); }
+  .pb-pct { font-family:'Playfair Display',serif; font-size:17px; color:var(--gold); }
+  .overview { background:var(--cream); border-left:4px solid var(--gold); margin:40px 40px 0; padding:24px 28px; border-radius:0 8px 8px 0; }
+  .overview-title { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:var(--muted); margin-bottom:10px; letter-spacing:0.05em; }
+  .overview p { font-size:13.5px; line-height:1.85; color:var(--ink); }
+  .pillars { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin:32px 40px 0; }
+  .pillar { background:var(--ink); color:var(--paper); padding:20px; border-radius:4px; }
+  .pillar-icon { font-size:24px; margin-bottom:10px; display:block; }
+  .pillar h3 { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:6px; }
+  .pillar p { font-size:12px; line-height:1.7; color:rgba(245,239,227,0.7); }
+  .section-label { display:flex; align-items:center; gap:16px; margin:48px 40px 20px; }
+  .section-label h2 { font-family:'Playfair Display',serif; font-size:26px; font-weight:400; color:var(--ink); }
+  .section-label .line { flex:1; height:1px; background:var(--gold); opacity:0.4; }
+  .section-label .num { font-size:11px; color:var(--gold); letter-spacing:0.15em; }
+  .theory-block { margin:0 40px 20px; background:var(--key-white); border:1px solid rgba(201,151,58,0.25); border-radius:8px; overflow:hidden; }
+  .theory-block .tb-header { background:var(--sage); color:white; padding:14px 24px; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; display:flex; align-items:center; gap:10px; }
+  .theory-block .tb-header.rust { background:var(--rust); }
+  .theory-block .tb-header.gold { background:var(--gold); color:var(--ink); }
+  .theory-block .tb-header.amber { background:var(--amber); color:var(--ink); }
+  .theory-block .tb-body { padding:28px 24px; }
+  .theory-block h3 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:14px; }
+  .theory-block p { font-size:13px; line-height:1.85; color:#3a3028; margin-bottom:14px; }
+  .theory-block p:last-child { margin-bottom:0; }
+  .theory-block strong { font-weight:500; }
+  .number-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin:20px 0; }
+  .num-cell { background:var(--ink); color:var(--amber); border-radius:6px; padding:14px 8px; text-align:center; }
+  .num-cell .degree { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; display:block; line-height:1; margin-bottom:4px; }
+  .num-cell .note { font-size:10px; letter-spacing:0.1em; color:rgba(245,239,227,0.55); }
+  .num-cell .name { font-size:9px; letter-spacing:0.08em; color:var(--gold); margin-top:4px; text-transform:uppercase; }
+  .num-cell.highlight { background:var(--rust); color:var(--paper); }
+  .num-cell.highlight .note { color:rgba(245,239,227,0.7); }
+  .scale-row { display:grid; grid-template-columns:repeat(8,1fr); gap:5px; margin:16px 0; }
+  .sc { padding:10px 4px; text-align:center; border-radius:4px; border:1px solid rgba(201,151,58,0.15); background:var(--cream); }
+  .sc.lit { background:rgba(201,151,58,0.12); border-color:rgba(201,151,58,0.35); }
+  .sc.blk { background:rgba(26,18,8,0.85); border-color:rgba(26,18,8,0.6); }
+  .sc .sd { font-size:9px; display:block; margin-bottom:2px; color:var(--muted); }
+  .sc.lit .sd { color:var(--gold); }
+  .sc.blk .sd { color:var(--amber); }
+  .sc .sn { font-size:12px; font-weight:700; display:block; color:var(--ink); }
+  .sc.blk .sn { color:var(--amber); }
+  .formula-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:14px 0; }
+  .step-badge { background:var(--ink); color:var(--amber); padding:6px 10px; border-radius:4px; font-size:12px; font-weight:500; }
+  .step-badge.gold { background:var(--gold); color:var(--ink); }
+  .step-badge.rust { background:var(--rust); color:white; }
+  .step-badge.sage { background:var(--sage); color:white; }
+  .step-badge.cream { background:var(--cream); color:var(--muted); border:1px solid rgba(201,151,58,0.3); }
+  .arrow { color:var(--gold); font-size:14px; }
+  .song-card { background:var(--cream); border:1px solid rgba(201,151,58,0.35); border-left:4px solid var(--gold); border-radius:0 8px 8px 0; padding:16px 20px; margin:16px 0; }
+  .song-card .sc-title { font-family:'Instrument Serif',serif; font-size:16px; color:var(--ink); margin-bottom:4px; }
+  .song-card .sc-detail { font-size:12px; color:var(--muted); line-height:1.6; }
+  .song-card .sc-detail strong { color:var(--ink); font-weight:500; }
+  .chord-map { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; margin:16px 0; }
+  .cm-cell { background:var(--ink); color:var(--amber); border-radius:6px; padding:12px 8px; text-align:center; }
+  .cm-cell.min { background:var(--rust); color:white; }
+  .cm-cell.flat { background:var(--sage); color:white; }
+  .cm-cell .cm-deg { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; display:block; line-height:1; margin-bottom:3px; }
+  .cm-cell .cm-note { font-size:10px; opacity:0.75; }
+  .days-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; margin:0 40px; }
+  .day-card { background:var(--key-white); border:1px solid rgba(201,151,58,0.2); border-radius:8px; overflow:hidden; transition:transform 0.2s ease,box-shadow 0.2s ease; }
+  .day-card:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(26,18,8,0.12); }
+  .day-header { padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(201,151,58,0.15); }
+  .day-name { font-family:'Playfair Display',serif; font-size:18px; }
+  .day-focus { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:4px 10px; border-radius:20px; border:1px solid; }
+  .focus-technique { color:var(--sage); border-color:var(--sage); }
+  .focus-theory { color:var(--rust); border-color:var(--rust); }
+  .focus-ear { color:var(--gold); border-color:var(--gold); }
+  .focus-combo { color:var(--muted); border-color:var(--muted); }
+  .focus-song { color:var(--amber); border-color:var(--amber); }
+  .day-body { padding:20px; }
+  .activity { display:flex; gap:14px; margin-bottom:16px; padding-bottom:16px; border-bottom:1px dashed rgba(201,151,58,0.2); }
+  .activity:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+  .activity-time { min-width:44px; text-align:center; }
+  .activity-time .mins { display:block; font-size:18px; font-weight:500; color:var(--gold); line-height:1; }
+  .activity-time .unit { font-size:9px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; }
+  .activity-content h4 { font-family:'Instrument Serif',serif; font-size:15px; margin-bottom:4px; color:var(--ink); }
+  .activity-content p { font-size:12px; line-height:1.75; color:#5a5040; }
+  .activity-content strong { font-weight:500; color:var(--ink); }
+  .tag { display:inline-block; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; padding:2px 7px; border-radius:3px; margin-top:6px; background:rgba(201,151,58,0.12); color:var(--gold); }
+  .tag.rust { background:rgba(184,76,28,0.1); color:var(--rust); }
+  .tag.sage { background:rgba(74,102,80,0.1); color:var(--sage); }
+  .tips-box { margin:0 40px; background:var(--ink); border-radius:8px; padding:28px 32px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:24px; }
+  .tip { display:flex; flex-direction:column; gap:8px; }
+  .tip-icon { font-size:22px; }
+  .tip h4 { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--amber); }
+  .tip p { font-size:12px; line-height:1.7; color:rgba(245,239,227,0.65); }
+  .progress-section { margin:40px 40px 0; }
+  .progress-title { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .progress-items { display:flex; flex-direction:column; gap:12px; }
+  .progress-item { display:grid; grid-template-columns:180px 1fr 50px; align-items:center; gap:14px; font-size:12px; }
+  .progress-item .label { color:var(--ink); }
+  .bar-track { background:rgba(201,151,58,0.15); border-radius:99px; height:6px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--gold),var(--amber)); }
+  .progress-item .pct { color:var(--gold); font-size:11px; text-align:right; }
+  footer { margin:48px 40px 0; padding-top:24px; border-top:1px solid rgba(201,151,58,0.25); display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); letter-spacing:0.08em; flex-wrap:wrap; gap:12px; }
+  .next-badge { background:var(--rust); color:white; padding:8px 16px; border-radius:4px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; }
+  @media(max-width:600px) {
+    header,.overview,.pillars,.section-label,.theory-block,.days-grid,.tips-box,.progress-section,footer,.progress-bar-wrap { margin-left:16px; margin-right:16px; }
+    .number-grid { grid-template-columns:repeat(4,1fr); }
+    .scale-row { grid-template-columns:repeat(4,1fr); }
+  }
+</style>
+</head>
+<body>
+<header>
+<div class="week-label">Your Piano Journey &middot; Week 11 of 12</div>
+<h1>The Final <em>Polish</em></h1>
+<p class="subtitle">Sustain pedal &middot; embellishments &middot; phrasing arcs &mdash; making three arrangements sound like a musician</p>
+<div class="header-meta"><div class="meta-chip"><span>New Skill</span><span>Sustain pedal technique</span></div><div class="meta-chip"><span>New Skill</span><span>Grace notes, fills, chord rolls</span></div><div class="meta-chip"><span>Big Skill</span><span>Phrasing arcs across a full song</span></div><div class="meta-chip"><span>Focus</span><span>Polish all 3 arrangements</span></div></div>
+</header>
+<div class="progress-bar-wrap">
+  <span class="pb-label">Course Progress</span>
+  <div class="pb-track"><div class="pb-fill" style="width:92%"></div></div>
+  <span class="pb-pct">92%</span>
+</div>
+<div class="overview"><div class="overview-title">What this week is about</div><p>Everything is built. This week is about refinement &mdash; taking three complete arrangements and making them sound like a musician, not a student. <strong>Sustain pedal</strong> adds warmth and resonance. <strong>Embellishments</strong> (grace notes, turns, fills, chord rolls) add personality. <strong>Phrasing arcs</strong> give each arrangement a deliberate emotional shape from intro to outro. And the <strong>four-pass polish method</strong> ensures every arrangement is performance-ready. There is no new song this week &mdash; the three you have are the goal.</p></div>
+
+<div class="pillars"><div class="pillar"><span class="pillar-icon">🎹</span><h3>Sustain Pedal</h3><p>Depress just after the chord lands, release just before the chord changes. The resulting resonance transforms the piano&rsquo;s sound. Syncopated pedaling is the professional technique.</p></div><div class="pillar"><span class="pillar-icon">✦</span><h3>Embellishments</h3><p>Grace notes (lean in), turns (note above&ndash;note&ndash;note below&ndash;note), passing fills (ascending run), chord rolls (arpeggio upward). One per phrase &mdash; not one per bar.</p></div><div class="pillar"><span class="pillar-icon">〜</span><h3>Phrasing Arc</h3><p>Every arrangement has a shape: intro (quiet, establish) &rarr; verse (build) &rarr; chorus (peak) &rarr; bridge (contrast) &rarr; outro (resolve). Draw it on paper and play it with intention.</p></div><div class="pillar"><span class="pillar-icon">📋</span><h3>Four-Pass Polish</h3><p>Pass 1: Structure. Pass 2: Harmony (7th upgrades in place?). Pass 3: Expression (dynamics, rubato). Pass 4: Performance (at tempo, no stopping, recorded).</p></div></div>
+<div class="section-label"><span class="num">01</span><h2>Core Theory</h2><div class="line"></div></div><div class="theory-block">
+  <div class="tb-header ">&#127925; Week 11 &mdash; Core Concepts</div>
+  <div class="tb-body"><h3>This Week&rsquo;s Key Ideas</h3><p><strong>New Skill:</strong> Sustain pedal technique</p><p><strong>New Skill:</strong> Grace notes, fills, chord rolls</p><div class="song-card">
+  <div class="sc-title">&#127925; O Holy Night &mdash; Traditional / Adolph Adam</div>
+  <div class="sc-detail"><strong>Optional study piece:</strong> O Holy Night &nbsp;&middot;&nbsp; <strong>Why:</strong> A powerful vehicle for all this week&rsquo;s skills: sustain pedal on the held notes, grace notes in the vocal melody, a dramatic dynamic arc from gentle verse to soaring &ldquo;fall on your knees&rdquo; &nbsp;&middot;&nbsp; Find it by ear in C or D major</div>
+</div></div>
+</div><div class="section-label"><span class="num">02</span><h2>Daily Practice Plans</h2><div class="line"></div></div><div class="days-grid"><div class="day-card">
+  <div class="day-header"><span class="day-name">Monday &mdash; Day 71</span><span class="day-focus focus-technique">Sustain Pedal</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Seven-Key Axis Run</h4><p>1&ndash;5&ndash;6m&ndash;4 in all 7 keys &mdash; no stopping. Under 5 minutes. Your permanent warm-up.</p><span class="tag">Warmup</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">12</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Sustain Pedal Introduction</h4><p>If you have a pedal: practice syncopated pedaling on C major scale first. Depress pedal just after each note, hold through, release just before the next note. Then apply to Axis in C: depress after each chord lands, release just before changing. <strong>No pedal:</strong> hold each chord&rsquo;s lowest note slightly longer to simulate resonance. This &ldquo;finger pedaling&rdquo; teaches the same principle.</p><span class="tag rust">Sustain Pedal</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">8</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Pass 1+2: Arrangement #1</h4><p>Structure check: does each section have a distinct identity? Harmony check: is Chord 1 upgraded to maj7? Is Chord 5 upgraded to V7 in the chorus? Fix anything missing.</p><span class="tag">Polish Pass</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Add One Embellishment to Arr #1</h4><p>Choose one moment &mdash; the start of the chorus or the final note of the verse &mdash; and add a grace note, chord roll, or ascending fill. One embellishment in the right place is worth ten scattered through the piece.</p><span class="tag sage">Embellishment</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Tuesday &mdash; Day 72</span><span class="day-focus focus-song">Arrangement #1 Full Polish</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Phrasing Arc: Draw Arr #1</h4><p>On paper: sketch the dynamic arc of Arrangement #1. Where is the peak? Is it at the right moment &mdash; the final chorus? Does the outro genuinely resolve softer than the intro?</p><span class="tag">Phrasing Arc</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">12</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Pass 3+4: Arrangement #1</h4><p>Pass 3: play through focusing entirely on dynamics, rubato, and LH balance (LH should be noticeably softer than RH). Pass 4: record at tempo, no stopping. This is your baseline for Week 12 comparison. Listen back and write two sentences.</p><span class="tag rust">Full Polish</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">8</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>LH Balance Focus</h4><p>Play Arrangement #1&rsquo;s verse: LH bass note on beat 1 should be distinctly louder than the chord on beat 2. The LH as a whole should sit at roughly 60% of the RH volume. If LH and RH feel equal, LH is too loud.</p><span class="tag">Balance</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Real-Time Round</h4><p>Two songs from shuffle, real-time play-along, under 15 seconds each. The goal now: stay in the full 2 minutes with the correct chord progression.</p><span class="tag">Real-Time</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Wednesday &mdash; Day 73</span><span class="day-focus focus-song">Arrangement #2 Full Polish</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Embellishment Warmup</h4><p>In isolation: 1) grace note into E (D&rarr;E quickly). 2) Turn on G (A&ndash;G&ndash;F&ndash;G). 3) Ascending fill C to G (C&ndash;D&ndash;E&ndash;F#&ndash;G as a smooth run). 4) Chord roll C major (C&ndash;E&ndash;G rolled upward). These four motions cover everything you&rsquo;ll need.</p><span class="tag">Embellishments</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">20</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>All Four Passes: Arrangement #2</h4><p>Apply all four passes in one 20-minute session: structure check &rarr; harmony check &rarr; expression run-through &rarr; performance recording. Add sustain pedal if available. Add one embellishment. This is a full polish cycle of one arrangement in one session.</p><span class="tag rust">Full Polish</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Memory Test: Arrangement #2</h4><p>Put away your notes. Play Arrangement #2 entirely from memory. Note any moment where memory wavered &mdash; that section needs extra drilling tomorrow.</p><span class="tag sage">Memory</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Thursday &mdash; Day 74</span><span class="day-focus focus-song">Arrangement #3 Full Polish</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Modulation Sharpening</h4><p>Play only the 8 bars around the modulation in Arrangement #3. 10 repetitions. The key change should feel inevitable now, not technical.</p><span class="tag">Modulation</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">20</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>All Four Passes: Arrangement #3</h4><p>Apply all four passes to your Man in the Mirror / modulation arrangement. Special attention: 1) Does the modulation land with emotional weight? 2) Does the colour chord feel woven in naturally? 3) Does the dynamic peak arrive after the key change?</p><span class="tag rust">Full Polish</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Memory Test: Arrangement #3</h4><p>Play Arrangement #3 entirely from memory. If memory fails at the modulation &mdash; drill those 4 bars 5 more times then test again.</p><span class="tag sage">Memory</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Friday &mdash; Day 75</span><span class="day-focus focus-combo">Full Dress Rehearsal</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Recital Warmup</h4><p>5 minutes: scales in C and A (soft, even), then Dm7&ndash;G7&ndash;Cmaj7 three times. Activates harmonic memory and finger independence. Keep it light &mdash; preparation, not exhaustion.</p><span class="tag">Warmup</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">18</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Full Three-Piece Recital &mdash; No Stopping</h4><p>Play all three arrangements in sequence as a complete recital. Between pieces: pause for 4 beats of silence, take a breath, begin the next piece. <strong>No stopping. No restarting. No apologising mid-performance.</strong> If you lose your place, find the nearest fitting chord and continue. That is exactly what professional musicians do.</p><span class="tag rust">Dress Rehearsal</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">7</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Listen + Final Notes</h4><p>Listen to the recording you just made. For each arrangement, write one sentence: &ldquo;The thing that sounded best was ___&rdquo; and &ldquo;In Week 12 I will focus on ___.&rdquo; Two sentences per piece. No more &mdash; over-analysis harms performance.</p><span class="tag sage">Assessment</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Saturday &mdash; Day 76</span><span class="day-focus focus-ear">Ear + Free Play</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Three-Second Major/Minor Drill</h4><p>10 songs from shuffle, three seconds each. Major or minor only. Your Week 2 self needed 10 minutes for this. Your Week 11 self should get 9/10 in under a minute.</p><span class="tag">Ear Test</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">10</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Real-Time Advanced: 5 Songs</h4><p>5 songs, full chord loop identification. Start within 15 seconds, stay 2 minutes, write: key + chord loop in numbers. Score yourself out of 5. 5/5 is the Week 12 target.</p><span class="tag rust">Advanced Ear</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">10</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Free Improvisation</h4><p>No goals, no exercises, no targets. Play whatever you feel like. Improvise over a minor key loop. Mix two arrangements. Play a progression you love and stay on it. This unstructured play is what music actually is.</p><span class="tag sage">Free Play</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">5</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Listen to a Pianist You Admire</h4><p>5 minutes: Norah Jones, Ben Folds, Bill Evans, Alicia Keys &mdash; anyone. Listen without analysing. Notice what you hear now that you couldn&rsquo;t name before you started this course.</p><span class="tag">Listening</span></div>
+</div></div>
+</div><div class="day-card">
+  <div class="day-header"><span class="day-name">Sunday &mdash; Day 77</span><span class="day-focus focus-combo">Week 11 Final Prep</span></div>
+  <div class="day-body"><div class="activity">
+  <div class="activity-time"><span class="mins">10</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Final Polish Run</h4><p>Play each arrangement once through at a relaxed, confident pace. Not a performance &mdash; a confident read-through. Notice what feels automatic (most of it) versus what still needs conscious thought (1&ndash;2 moments per piece, normal at this stage).</p><span class="tag">Polish</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">10</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Week 12 Planning</h4><p>Write your Week 12 plan: 1) What order will you play the three pieces? 2) What is one specific focus for each piece? 3) What time Sunday will you do your final recording? Treat it like a real event.</p><span class="tag rust">Planning</span></div>
+</div><div class="activity">
+  <div class="activity-time"><span class="mins">10</span><span class="unit">min</span></div>
+  <div class="activity-content"><h4>Pre-Final Reflection</h4><p>Write: 1) What does your playing sound like now vs Week 1? 2) Which of your three arrangements are you most attached to? 3) What was the hardest skill in the course &mdash; and can you do it now? 4) Who would you play these pieces for?</p><span class="tag">Reflection</span></div>
+</div></div>
+</div></div><div class="section-label"><span class="num">03</span><h2>Teacher's Notes</h2><div class="line"></div></div><div class="tips-box"><div class="tip"><span class="tip-icon">🎹</span><h4>Polish Is Not Perfection</h4><p>The goal is honest and expressive playing, not flawless playing. A slightly imperfect arrangement played with genuine feeling is more musical than a technically accurate arrangement played mechanically.</p></div><div class="tip"><span class="tip-icon">✦</span><h4>One Embellishment Per Phrase</h4><p>Every student discovers embellishments and immediately overuses them. One in the right place is worth ten scattered. Save them for arrivals: the start of a chorus, the final note of a section.</p></div><div class="tip"><span class="tip-icon">〜</span><h4>Draw the Arc</h4><p>Before playing an arrangement, draw its dynamic shape on paper. Intro height, verse height, chorus peak, bridge contrast, outro resolution. Then play the shape, not just the notes.</p></div><div class="tip"><span class="tip-icon">🎤</span><h4>Play for Someone</h4><p>If possible: play your three arrangements for one other person this week. Even once. Playing for a listener changes how you play &mdash; it activates the performance mindset that makes Week 12 easier.</p></div><div class="tip"><span class="tip-icon">📋</span><h4>Saturday Free Play Is Not Optional</h4><p>Unstructured play is how your brain integrates everything it has learned. After 11 weeks of directed practice, your musical intuition needs space to operate without instructions.</p></div><div class="tip"><span class="tip-icon">✅</span><h4>You Are a Pianist</h4><p>There&rsquo;s a moment somewhere in Week 11 when the word &ldquo;beginner&rdquo; stops applying. You have a harmonic vocabulary, a repertoire, and ears that hear music differently. Own it.</p></div></div><div class="progress-section"><div class="section-label" style="margin:32px 0 20px;"><span class="num">04</span><h2>Week Mastery Targets</h2><div class="line"></div></div><div class="progress-items"><div class="progress-item"><span class="label">Sustain pedal technique (or finger-pedal equivalent)</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">Grace note used in at least one arrangement</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">Chord roll used in at least one outro</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">Phrasing arc drawn for all three arrangements</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">All 4 Polish Passes: Arrangement #1</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">All 4 Polish Passes: Arrangement #2</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">All 4 Polish Passes: Arrangement #3</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">All 3 arrangements playable from memory</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">Full dress rehearsal recorded</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div><div class="progress-item"><span class="label">Real-time ear: 5/5 songs identified in &lt;15 sec</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">&#9633; Done</span></div></div></div><footer>
+  <span>Piano Journey &middot; Week 11 &middot; Building your musical vocabulary</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span>Next: Week 12 &mdash; the final recording session, ear demonstration &amp; the complete recital &rarr;</span>
+    <span class="next-badge">Week 12 &#8594;</span>
+  </div>
+</footer>
+</body>
+</html>

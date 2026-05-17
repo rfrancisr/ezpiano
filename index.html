@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piano Journey — 12-Week Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5efe3;
+    --cream: #ede5d0;
+    --gold: #c9973a;
+    --amber: #e8b84b;
+    --rust: #b84c1c;
+    --sage: #4a6650;
+    --muted: #7a6e5f;
+    --key-white: #faf7f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    min-height: 100vh;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 27px,
+      rgba(201,151,58,0.08) 27px, rgba(201,151,58,0.08) 28px
+    );
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '🎹';
+    position: absolute;
+    right: -10px; top: -20px;
+    font-size: 220px;
+    opacity: 0.05;
+    transform: rotate(-12deg);
+    pointer-events: none;
+  }
+
+  .course-label {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--key-white);
+    margin-bottom: 18px;
+  }
+  h1 em { font-style: italic; color: var(--amber); }
+
+  .tagline {
+    font-size: 13px;
+    color: rgba(245,239,227,0.55);
+    max-width: 520px;
+    line-height: 1.75;
+    letter-spacing: 0.03em;
+    margin-bottom: 36px;
+  }
+
+  .course-stats {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; gap: 3px; }
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,239,227,0.4);
+  }
+
+  /* ── INTRO BANNER ── */
+  .intro {
+    background: var(--cream);
+    border-left: 4px solid var(--gold);
+    margin: 40px 40px 0;
+    padding: 22px 28px;
+    border-radius: 0 8px 8px 0;
+  }
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .intro p {
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  /* ── PILLARS ── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 28px 40px 0;
+  }
+  .pillar {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 20px;
+    border-radius: 4px;
+  }
+  .pillar-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+  .pillar h3 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 5px;
+  }
+  .pillar p { font-size: 11.5px; line-height: 1.65; color: rgba(245,239,227,0.65); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 40px 20px;
+  }
+  .section-label h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .section-label .line { flex: 1; height: 1px; background: var(--gold); opacity: 0.4; }
+
+  /* ── WEEK GRID ── */
+  .weeks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 0 40px;
+  }
+
+  .week-card {
+    background: var(--key-white);
+    border: 1px solid rgba(201,151,58,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    position: relative;
+  }
+  .week-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 36px rgba(26,18,8,0.13);
+    border-color: rgba(201,151,58,0.45);
+  }
+
+  .wc-top {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(201,151,58,0.12);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .wc-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 44px;
+    opacity: 0.5;
+  }
+
+  .wc-head { flex: 1; }
+  .wc-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .wc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .wc-body {
+    padding: 14px 20px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .wc-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .skill-tag {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: rgba(201,151,58,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(201,151,58,0.2);
+  }
+  .skill-tag.rust { background: rgba(184,76,28,0.08); color: var(--rust); border-color: rgba(184,76,28,0.2); }
+  .skill-tag.sage { background: rgba(74,102,80,0.08); color: var(--sage); border-color: rgba(74,102,80,0.2); }
+
+  .wc-song {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    background: rgba(201,151,58,0.06);
+    border-radius: 4px;
+    border-left: 2px solid var(--gold);
+  }
+  .wc-song-icon { font-size: 12px; flex-shrink: 0; }
+  .wc-song-text { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .wc-song-text strong { color: var(--ink); font-weight: 500; }
+
+  .wc-footer {
+    padding: 10px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wc-days {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .wc-arrow {
+    font-size: 13px;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .week-card:hover .wc-arrow { opacity: 1; transform: translateX(0); }
+
+  /* Progress indicator */
+  .wc-progress {
+    height: 2px;
+    background: rgba(201,151,58,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .wc-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--amber));
+    transition: width 0.4s ease;
+  }
+
+  /* Milestone badges */
+  .milestone-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .mb-halfway { background: var(--sage); color: white; }
+  .mb-final { background: var(--rust); color: white; }
+
+  /* ── TIPS STRIP ── */
+  .tips-strip {
+    margin: 48px 40px 0;
+    background: var(--ink);
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  .ts-item { display: flex; flex-direction: column; gap: 6px; }
+  .ts-icon { font-size: 20px; }
+  .ts-title {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+  .ts-text { font-size: 12px; line-height: 1.7; color: rgba(245,239,227,0.6); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin: 48px 40px 0;
+    padding: 24px 0 48px;
+    border-top: 1px solid rgba(201,151,58,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 36px; }
+    .intro, .pillars, .section-label, .weeks-grid, .tips-strip, footer {
+      margin-left: 16px; margin-right: 16px;
+    }
+    .course-stats { gap: 20px; }
+    h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="course-label">Piano Journey &nbsp;·&nbsp; 12-Week Self-Teaching Course</div>
+  <h1>Learn Piano<br>by <em>Ear</em></h1>
+  <p class="tagline">No sheet music. No classical pieces. Just the Nashville Number System, your ears, and your hands — building everything from the ground up in 30 minutes a day.</p>
+  <div class="course-stats">
+    <div class="stat"><span class="stat-val">12</span><span class="stat-label">Weeks</span></div>
+    <div class="stat"><span class="stat-val">84</span><span class="stat-label">Days</span></div>
+    <div class="stat"><span class="stat-val">7+</span><span class="stat-label">Keys</span></div>
+    <div class="stat"><span class="stat-val">30</span><span class="stat-label">Min / Day</span></div>
+    <div class="stat"><span class="stat-val">0</span><span class="stat-label">Sheet Music</span></div>
+  </div>
+</header>
+
+<!-- INTRO -->
+<div class="intro">
+  <div class="intro-title">How this course works</div>
+  <p>Each week is a standalone lesson with theory, daily 30-minute practice plans, a real song to play, and a checklist of mastery targets. Start at Week 1 and work through in order — every skill builds on the one before it. By Week 12 you will have three complete song arrangements, a working ear for harmony, and the ability to play along with any song within 15 seconds of hearing it.</p>
+</div>
+
+<!-- PILLARS -->
+<div class="pillars">
+  <div class="pillar">
+    <span class="pillar-icon">🔢</span>
+    <h3>Number System</h3>
+    <p>Think in numbers 1–7, not note names. Transpose to any key instantly. The same system professional session musicians use.</p>
+  </div>
+  <div class="pillar">
+    <span class="pillar-icon">👂</span>
+    <h3>Playing by Ear</h3>
+    <p>Find any melody, identify any key, play along with any song — all by ear. No sheet music ever required.</p>
+  </div>
+  <div class="pillar">
+    <span class="pillar-icon">🎵</span>
+    <h3>Real Songs</h3>
+    <p>Every week features a real, popular song as the practical target. Beatles, Scorpions, Armstrong, Cohen, Metallica and more.</p>
+  </div>
+  <div class="pillar">
+    <span class="pillar-icon">🎹</span>
+    <h3>30 Min / Day</h3>
+    <p>Every session is structured to fit in exactly 30 minutes. Timed activities, clear goals, no filler.</p>
+  </div>
+</div>
+
+<!-- WEEK GRID -->
+<div class="section-label">
+  <h2>Choose Your Week</h2>
+  <div class="line"></div>
+</div>
+
+<div class="weeks-grid">
+
+  <!-- WEEK 1 -->
+  <a class="week-card" href="piano-week1.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:8%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">01</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 1 &nbsp;·&nbsp; Days 1–7</div>
+        <div class="wc-title">The Foundation of All Music</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag">C Major Scale</span>
+        <span class="skill-tag">Chords 1 · 4 · 5</span>
+        <span class="skill-tag sage">Number System</span>
+        <span class="skill-tag">12-Bar Blues</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>12-Bar Blues in C</strong> &nbsp;·&nbsp; First real song</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; Complete beginner</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 2 -->
+  <a class="week-card" href="piano-week2-v2.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:17%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">02</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 2 &nbsp;·&nbsp; Days 8–14</div>
+        <div class="wc-title">The Minor World &amp; Key Detection</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">6 Minor Chord</span>
+        <span class="skill-tag">Axis 1–5–6m–4</span>
+        <span class="skill-tag sage">Key Detection</span>
+        <span class="skill-tag">LH Bass + RH Chord</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Let It Be</strong> — The Beatles &nbsp;·&nbsp; C Major</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; First real play-along</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 3 -->
+  <a class="week-card" href="piano-week3-v2.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:25%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">03</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 3 &nbsp;·&nbsp; Days 15–21</div>
+        <div class="wc-title">Your First Key Change</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">G Major (1 sharp)</span>
+        <span class="skill-tag">2 Minor Chord</span>
+        <span class="skill-tag sage">Major vs Minor Keys</span>
+        <span class="skill-tag">Inversions</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Wonderful Tonight</strong> — Eric Clapton &nbsp;·&nbsp; G Major</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; First key change</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 4 -->
+  <a class="week-card" href="piano-week4-v2.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:33%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">04</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 4 &nbsp;·&nbsp; Days 22–28</div>
+        <div class="wc-title">Melody Arrives</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">D Major (2 sharps)</span>
+        <span class="skill-tag">3 Minor Chord</span>
+        <span class="skill-tag sage">First Melody</span>
+        <span class="skill-tag">Descending Chain</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Let Her Go</strong> — Passenger &nbsp;·&nbsp; D Major</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; 1 month complete</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 5 -->
+  <a class="week-card" href="piano-week5-v2.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:42%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">05</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 5 &nbsp;·&nbsp; Days 29–35</div>
+        <div class="wc-title">Finding Songs by Ear</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">A Major (3 sharps)</span>
+        <span class="skill-tag">Sus2 + Sus4</span>
+        <span class="skill-tag sage">Melody by Ear</span>
+        <span class="skill-tag">Circle of Fifths</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Wind of Change</strong> — Scorpions &nbsp;·&nbsp; Melody exercise</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; The skill that changes everything</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 6 -->
+  <a class="week-card" href="piano-week6-v2.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:50%"></div></div>
+    <span class="milestone-badge mb-halfway">Halfway</span>
+    <div class="wc-top">
+      <span class="wc-num">06</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 6 &nbsp;·&nbsp; Days 36–42</div>
+        <div class="wc-title">The Flat Side &amp; Full Songs</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">F Major (1 flat)</span>
+        <span class="skill-tag">3 LH Patterns</span>
+        <span class="skill-tag sage">Full Song Mapping</span>
+        <span class="skill-tag">Dynamics</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Knockin' on Heaven's Door</strong> — Bob Dylan</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; Halfway milestone</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 7 -->
+  <a class="week-card" href="piano-week7.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:58%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">07</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 7 &nbsp;·&nbsp; Days 43–49</div>
+        <div class="wc-title">Dominant 7ths &amp; Blues Mastery</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">B♭ Major (2 flats)</span>
+        <span class="skill-tag">Dominant 7th</span>
+        <span class="skill-tag sage">12-Bar Blues Upgrade</span>
+        <span class="skill-tag">Rubato</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>What a Wonderful World</strong> — Louis Armstrong</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; Jazz &amp; gospel territory</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 8 -->
+  <a class="week-card" href="piano-week8.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:67%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">08</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 8 &nbsp;·&nbsp; Days 50–56</div>
+        <div class="wc-title">Major 7ths, Minor 7ths &amp; Your First Arrangement</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag">Major 7th (Imaj7)</span>
+        <span class="skill-tag rust">Minor 7th (IIm7)</span>
+        <span class="skill-tag sage">ii–V–I Jazz Motion</span>
+        <span class="skill-tag">Full Arrangement</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Hallelujah</strong> — Leonard Cohen &nbsp;·&nbsp; Arrangement #1</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; First complete arrangement</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 9 -->
+  <a class="week-card" href="piano-week9.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:75%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">09</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 9 &nbsp;·&nbsp; Days 57–63</div>
+        <div class="wc-title">Minor Keys as Home</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag rust">E Major (4 sharps)</span>
+        <span class="skill-tag">Harmonic Minor</span>
+        <span class="skill-tag sage">Arrangement #2</span>
+        <span class="skill-tag">Speed Detection</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Nothing Else Matters</strong> — Metallica &nbsp;·&nbsp; E minor</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; Minor keys as tonal home</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 10 -->
+  <a class="week-card" href="piano-week10.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:83%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">10</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 10 &nbsp;·&nbsp; Days 64–70</div>
+        <div class="wc-title">Modulation &amp; Colour Chords</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag sage">Modulation (3 methods)</span>
+        <span class="skill-tag">add9 · sus · slash</span>
+        <span class="skill-tag rust">Arrangement #3</span>
+        <span class="skill-tag">Real-Time &lt;15 sec</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text"><strong>Amazing Grace</strong> — C → D modulation</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; Key changes &amp; colour</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 11 -->
+  <a class="week-card" href="piano-week11.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:92%"></div></div>
+    <div class="wc-top">
+      <span class="wc-num">11</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 11 &nbsp;·&nbsp; Days 71–77</div>
+        <div class="wc-title">The Final Polish</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag">Sustain Pedal</span>
+        <span class="skill-tag sage">Embellishments</span>
+        <span class="skill-tag">Phrasing Arcs</span>
+        <span class="skill-tag rust">Four-Pass Polish</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎵</span>
+        <span class="wc-song-text">Polish all 3 arrangements &nbsp;·&nbsp; Dress rehearsal</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; One week to the finish</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- WEEK 12 -->
+  <a class="week-card" href="piano-week12.html">
+    <div class="wc-progress"><div class="wc-progress-fill" style="width:100%"></div></div>
+    <span class="milestone-badge mb-final">Final Week</span>
+    <div class="wc-top">
+      <span class="wc-num">12</span>
+      <div class="wc-head">
+        <div class="wc-label">Week 12 &nbsp;·&nbsp; Days 78–84</div>
+        <div class="wc-title">The Recital</div>
+      </div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-skills">
+        <span class="skill-tag sage">3-Piece Recital</span>
+        <span class="skill-tag">Ear Demonstration</span>
+        <span class="skill-tag rust">Final Recording</span>
+        <span class="skill-tag">12 Reflections</span>
+      </div>
+      <div class="wc-song">
+        <span class="wc-song-icon">🎼</span>
+        <span class="wc-song-text">Record your 3 arrangements &nbsp;·&nbsp; Certificate earned</span>
+      </div>
+    </div>
+    <div class="wc-footer">
+      <span class="wc-days">7 days &nbsp;·&nbsp; The piano is yours</span>
+      <span class="wc-arrow">→</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- TIPS STRIP -->
+<div class="tips-strip">
+  <div class="ts-item">
+    <span class="ts-icon">🎹</span>
+    <div class="ts-title">What you need</div>
+    <div class="ts-text">Any keyboard with at least 4 octaves. A sustain pedal is helpful from Week 11 but not required. No headphones needed.</div>
+  </div>
+  <div class="ts-item">
+    <span class="ts-icon">⏱️</span>
+    <div class="ts-title">30 minutes a day</div>
+    <div class="ts-text">Every session is timed. Each activity tells you exactly how many minutes to spend. No session runs over 30 minutes.</div>
+  </div>
+  <div class="ts-item">
+    <span class="ts-icon">📋</span>
+    <div class="ts-title">Follow in order</div>
+    <div class="ts-text">Each week builds directly on the one before. Don't skip ahead — the skills compound. Week 5 is only possible because of Weeks 1–4.</div>
+  </div>
+  <div class="ts-item">
+    <span class="ts-icon">👂</span>
+    <div class="ts-title">No sheet music. Ever.</div>
+    <div class="ts-text">Everything in this course is learned by ear using the Nashville Number System. You will never need to read a note of sheet music.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Piano Journey &nbsp;·&nbsp; 12-Week Adult Beginner Course &nbsp;·&nbsp; Nashville Number System</span>
+  <span>30 min / day &nbsp;·&nbsp; No sheet music &nbsp;·&nbsp; Playing by ear</span>
+</footer>
+
+</body>
+</html>
